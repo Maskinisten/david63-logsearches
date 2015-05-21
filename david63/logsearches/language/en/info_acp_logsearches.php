@@ -52,4 +52,7 @@ $lang = array_merge($lang, array(
 	'SEARCH_LOG_PRUNE_LOG'			=> '<strong>Search log file pruned</strong>',
 	'SEARCH_SUCCESS'				=> 'Success',
 	'SEARCH_FAIL'					=> 'Fail',
+	'SEARCH_LOG_CLEAR'				=> '<strong>Search log file cleared</strong>',
+	'SORT_KEYWORDS'					=> 'Keywords',
+	'SORT_SEARCH_TYPE'				=> 'Search type',
 ));

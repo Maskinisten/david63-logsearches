@@ -143,15 +143,18 @@ class admin_controller implements admin_interface
 		$sort_key		= $this->request->variable('sk', 't');
 		$sd = $sort_dir	= $this->request->variable('sd', 'd');
 
-		$forum_id	= $this->request->variable('f', 0);
-		$topic_id	= $this->request->variable('t', 0);
-		$start		= $this->request->variable('start', 0);
 		$deletemark = $this->request->variable('delmarked', false, false, \phpbb\request\request_interface::POST);
-		$deleteall	= $this->request->variable('delall', false, false, \phpbb\request\request_interface::POST);
 		$marked		= $this->request->variable('mark', array(0));
 
+		$log_count = 0;
+
+		// Sort keys
+		$sort_days	= $this->request->variable('st', 0);
+		$sort_key	= $this->request->variable('sk', 't');
+		$sort_dir	= $this->request->variable('sd', 'd');
+
 		// Delete entries if requested and able
-		if (($deletemark || $deleteall) && $auth->acl_get('a_clearlogs'))
+		if ($deletemark  && $this->auth->acl_get('a_clearlogs'))
 		{
 			if (confirm_box(true))
 			{
@@ -162,33 +165,17 @@ class admin_controller implements admin_interface
 					$conditions['log_id'] = array('IN' => $marked);
 				}
 
-				if ($deleteall)
-				{
-					if ($sort_days)
-					{
-						$conditions['log_time'] = array('>=', time() - ($sort_days * 86400));
-					}
-
-					$keywords = utf8_normalize_nfc(request_var('keywords', '', true));
-					$conditions['keywords'] = $keywords;
-				}
-
-				$phpbb_log = $phpbb_container->get('log');
-				$this->search_log_delete($mode, $conditions);
+				$this->search_log_delete($conditions);
 			}
 			else
 			{
-				confirm_box(false, $user->lang['CONFIRM_OPERATION'], build_hidden_fields(array(
-					'f'			=> $forum_id,
+				confirm_box(false, $this->user->lang['CONFIRM_OPERATION'], build_hidden_fields(array(
 					'start'		=> $start,
 					'delmarked'	=> $deletemark,
-					'delall'	=> $deleteall,
 					'mark'		=> $marked,
 					'st'		=> $sort_days,
 					'sk'		=> $sort_key,
 					'sd'		=> $sort_dir,
-					'i'			=> $id,
-					'mode'		=> $mode,
 					'action'	=> $action))
 				);
 			}
@@ -196,15 +183,15 @@ class admin_controller implements admin_interface
 
 		// Sorting
 		$limit_days = array(0 => $this->user->lang['ALL_ENTRIES'], 1 => $this->user->lang['1_DAY'], 7 => $this->user->lang['7_DAYS'], 14 => $this->user->lang['2_WEEKS'], 30 => $this->user->lang['1_MONTH'], 90 => $this->user->lang['3_MONTHS'], 180 => $this->user->lang['6_MONTHS'], 365 => $this->user->lang['1_YEAR']);
-		$sort_by_text = array('u' => $this->user->lang['SORT_USERNAME'], 't' => $this->user->lang['SORT_DATE'], 'i' => $this->user->lang['SORT_IP'], 'o' => $this->user->lang['SORT_ACTION']);
-		$sort_by_sql = array('u' => 'u.username_clean', 't' => 'l.log_time', 'i' => 'l.log_ip', 'o' => 'l.log_operation');
+		$sort_by_text = array('u' => $this->user->lang['SORT_USERNAME'], 't' => $this->user->lang['SORT_DATE'], 'i' => $this->user->lang['SORT_IP'], 's' => $this->user->lang['SORT_SEARCH_TYPE'], 'o' => $this->user->lang['SORT_KEYWORDS']);
+		$sort_by_sql = array('u' => 'u.username_clean', 't' => 'l.log_time', 'i' => 'l.log_ip', 's' => 'l.log_search_type', 'o' => 'l.log_data');
 
 		$s_limit_days = $s_sort_key = $s_sort_dir = $u_sort_param = '';
 		gen_sort_selects($limit_days, $sort_by_text, $sort_days, $sort_key, $sort_dir, $s_limit_days, $s_sort_key, $s_sort_dir, $u_sort_param);
 
 		// Define where and sort sql for use in displaying logs
-		$sql_where = ($sort_days) ? (time() - ($sort_days * 86400)) : 0;
-		$sql_sort = $sort_by_sql[$sort_key] . ' ' . (($sort_dir == 'd') ? 'DESC' : 'ASC');
+		$sql_where	= ($sort_days) ? (time() - ($sort_days * 86400)) : 0;
+		$sql_sort	= $sort_by_sql[$sort_key] . ' ' . (($sort_dir == 'd') ? 'DESC' : 'ASC');
 
 		$keywords = utf8_normalize_nfc(request_var('keywords', '', true));
 		$keywords_param = !empty($keywords) ? '&amp;keywords=' . urlencode(htmlspecialchars_decode($keywords)) : '';
@@ -212,10 +199,8 @@ class admin_controller implements admin_interface
 
 
 		$sort_by = '';
-		//$this->config['topics_per_page'] = 3;
 
-		// Grab log data
-		$log_count = 0;
+
 
 		// Get total log count for pagination
 		$sql = 'SELECT COUNT(log_id) AS total_logs
@@ -235,7 +220,7 @@ class admin_controller implements admin_interface
 			FROM ' . $this->search_log_table . ' l, ' . USERS_TABLE . " u
 			WHERE u.user_id = l.user_id";
 			//ORDER BY $sort_by";
-		$result = $this->db->sql_query_limit($sql, $this->config['topics_per_page'], 0);
+		$result = $this->db->sql_query_limit($sql, $this->config['topics_per_page'], $start);
 
 		while ($row = $this->db->sql_fetchrow($result))
 		{
@@ -263,10 +248,9 @@ class admin_controller implements admin_interface
 		);
 	}
 
-	protected function search_log_delete($mode, $conditions = array())
+	protected function search_log_delete($conditions = array())
 	{
-
-		$sql_where = '';
+		$sql_where = 'WHERE ';
 
 		if (isset($conditions['keywords']))
 		{
@@ -277,7 +261,7 @@ class admin_controller implements admin_interface
 
 		foreach ($conditions as $field => $field_value)
 		{
-			$sql_where .= ' AND ';
+			//$sql_where .= ' AND ';
 
 			if (is_array($field_value) && sizeof($field_value) == 2 && !is_array($field_value[1]))
 			{
@@ -297,7 +281,8 @@ class admin_controller implements admin_interface
 					$sql_where";
 		$this->db->sql_query($sql);
 
-		$this->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_CLEAR_' . strtoupper($mode));
+		$phpbb_log = $this->container->get('log');
+		$phpbb_log->add('admin', $this->user->data['user_id'], $this->user->ip, 'SEARCH_LOG_CLEAR');
 	}
 
 	protected function get_search_type($type)

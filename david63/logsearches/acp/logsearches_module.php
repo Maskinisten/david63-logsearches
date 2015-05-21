@@ -23,10 +23,10 @@ class logsearches_module
 		// Get an instance of the admin controller
 		$admin_controller = $phpbb_container->get('david63.logsearches.admin.controller');
 
-		$admin_controller->display_options();
-		$admin_controller->display_output();
-
 		// Make the $u_action url available in the admin controller
 		$admin_controller->set_page_url($this->u_action);
+
+		$admin_controller->display_options();
+		$admin_controller->display_output();
 	}
 }
