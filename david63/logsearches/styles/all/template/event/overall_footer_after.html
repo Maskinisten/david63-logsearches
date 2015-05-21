@@ -1,0 +1,26 @@
+<!-- IF S_COOKIE_ENABLED && !S_SHOW_COOKIE_ACCEPT -->
+	<script>
+		var phpbbCookieName	= '{COOKIE_NAME}';
+		var acceptText		= '{LA_COOKIE_ACCEPT}';
+		var cookieText		= '{LA_COOKIE_ACCEPT_TEXT}';
+		var cookieExpires	= '{COOKIE_EXPIRES}';
+		var cookieClass		= '{COOKIE_CLASS}';
+	</script>
+
+	<!-- INCLUDEJS cookie_fn.js -->
+
+	<!-- IF S_COOKIE_CUSTOM_BOX -->
+		<style type="text/css">
+		<!--
+			.cookie-box {
+				background-color: {{ COOKIE_BOX_BG_COLOUR }};
+				color: {{ COOKIE_BOX_TXT_COLOUR }};
+			}
+			.cookie-box a {
+				color: {{ COOKIE_BOX_HREF_COLOUR }};
+			}
+		-->
+		</style>
+	<!-- ENDIF -->
+
+<!-- ENDIF -->

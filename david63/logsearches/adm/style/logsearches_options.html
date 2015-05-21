@@ -1,0 +1,45 @@
+<!-- INCLUDE overall_header.html -->
+
+<h1>{L_SEARCH_LOG_OPTIONS}</h1>
+<p>{L_SEARCH_LOG_OPTIONS_EXPLAIN}</p>
+
+<form id="logsearches" method="post" action="{U_ACTION}">
+
+	<fieldset>
+		<legend>{L_SEARCH_LOG_OPTIONS}</legend>
+
+		<dl>
+			<dt><label for="search_log_enable">{L_SEARCH_LOG_ENABLE}{L_COLON}</label></dt>
+			<dd><label><input type="radio" class="radio" name="search_log_enable" value="1" id="search_log_enable"<!-- IF SEARCH_LOG_ENABLE --> checked="checked"<!-- ENDIF -->/> {L_ENABLE}</label>
+				<label><input type="radio" class="radio" name="search_log_enable" value="0" <!-- IF not SEARCH_LOG_ENABLE --> checked="checked"<!-- ENDIF --> /> {L_DISABLE}</label></dd>
+		</dl>
+
+		<dl>
+			<dt><label for="search_log_all">{L_SEARCH_LOG_ALL}{L_COLON}</label><br /><span>{L_SEARCH_LOG_ALL_EXPLAIN}</span></dt>
+			<dd><label><input type="radio" class="radio" name="search_log_all" value="1" id="search_log_all"<!-- IF SEARCH_LOG_ALL --> checked="checked"<!-- ENDIF -->/> {L_YES}</label>
+				<label><input type="radio" class="radio" name="search_log_all" value="0" <!-- IF not SEARCH_LOG_ALL --> checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>
+		</dl>
+
+		<dl>
+			<dt><label for="search_log_prune_all">{L_SEARCH_LOG_PRUNE_ALL}{L_COLON}</label><br /><span>{L_SEARCH_LOG_PRUNE_ALL_EXPLAIN}</span></dt>
+			<dd><label><input type="radio" class="radio" name="search_log_prune_all" value="1" id="search_log_prune_all"<!-- IF SEARCH_LOG_PRUNE_ALL --> checked="checked"<!-- ENDIF -->/> {L_YES}</label>
+				<label><input type="radio" class="radio" name="search_log_prune_all" value="0" <!-- IF not SEARCH_LOG_PRUNE_ALL --> checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>
+		</dl>
+
+		<dl>
+			<dt><label for="search_log_prune_days">{L_SEARCH_LOG_PRUNE_DAYS}{L_COLON}</label><br /><span>{L_SEARCH_LOG_PRUNE_DAYS_EXPLAIN}</span></dt>
+			<dd><input name="search_log_prune_days" type="number" id="search_log_prune_days" value="{SEARCH_LOG_PRUNE_DAYS}" maxlength="2" size="2" min="0" max="99" /></dd>
+		</dl>
+	</fieldset>
+
+	<fieldset>
+		<legend>{L_ACP_SUBMIT_CHANGES}</legend>
+		<p class="submit-buttons">
+			<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;
+			<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
+		</p>
+		{S_FORM_TOKEN}
+	</fieldset>
+</form>
+
+<!-- INCLUDE overall_footer.html -->

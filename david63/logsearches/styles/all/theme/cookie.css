@@ -1,0 +1,36 @@
+#cookie-box {
+	clear: both;
+}
+
+.cookie-box {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+	display: none;
+	-webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    border: 1px solid #FFFF8A;
+    padding: 10px;
+	position: fixed;
+	z-index: 10;
+	bottom: 10px;
+	width: 200px;
+	color: #DBDB00;
+    background-color: #00608F;
+}
+
+.cookie-box.leftside {
+    left: 35px;
+	float: left;
+}
+
+.cookie-box.rightside {
+    right: 35px;
+	float: right;
+}
+
+ .cookie-box a {
+	float: right;
+	color: #FFFFFF;
+}

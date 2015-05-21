@@ -1,0 +1,38 @@
+imports:
+    - { resource: tables.yml }
+
+services:
+    david63.logsearches.listener:
+        class: david63\logsearches\event\listener
+        arguments:
+            - @config
+            - @user
+            - @dbal.conn
+            - %david63.logsearches.tables.search_log%
+        tags:
+            - { name: event.listener }
+
+    cron.task.core.prune_search_log:
+        class: david63\logsearches\cron\task\core\prune_search_log
+        arguments:
+            - @config
+            - @dbal.conn
+            - @log
+            - @user
+            - %david63.logsearches.tables.search_log%
+        calls:
+            - [set_name, [cron.task.core.prune_search_log]]
+        tags:
+            - { name: cron.task }
+
+    david63.logsearches.admin.controller:
+        class: david63\logsearches\controller\admin_controller
+        arguments:
+            - @config
+            - @dbal.conn
+            - @request
+            - @template
+            - @user
+            - @service_container
+            - @auth
+            - %david63.logsearches.tables.search_log%
