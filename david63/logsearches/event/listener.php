@@ -64,16 +64,16 @@ class listener implements EventSubscriberInterface
 	static public function getSubscribedEvents()
 	{
 		return array(
-			'core.search_results_modify_search_title' => 'search_test',
+			'core.search_results_modify_search_title' => 'log_search',
 		);
 	}
 
-	public function search_test($event)
+	public function log_search($event)
 	{
 		if ($this->config['search_log_enable'])
 		{
 			$keywords			= $event['keywords'];
-			$total_match_count	= $event['total_match_count'];
+			$total_match_count	= ($event['total_match_count'] > 0) ? true : false;
 
 			if (($this->config['search_log_all'] || (!$this->config['search_log_all'] && !$total_match_count)) && $keywords)
 			{

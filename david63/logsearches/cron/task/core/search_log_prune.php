@@ -17,7 +17,7 @@ if (!defined('IN_PHPBB'))
 	exit;
 }
 
-class prune_search_log extends \phpbb\cron\task\base
+class search_log_prune extends \phpbb\cron\task\base
 {
 	/** @var \phpbb\config\config */
 	protected $config;

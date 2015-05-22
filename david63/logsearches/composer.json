@@ -1,14 +1,14 @@
 {
 	"name": "david63/logsearches",
 	"type": "phpbb-extension",
-	"description": "Create a log for search enquiries.",
+	"description": "Creates a log for search enquiries.",
 	"homepage": "",
 	"version": "0.0.1-b1",
 	"time": "2015-05-18",
 	"keywords": [
 		"phpbb",
 		"extension",
-		"cookie",
+		"search",
 		"ACP"
 	],
 	"license": "GPL-2.0",

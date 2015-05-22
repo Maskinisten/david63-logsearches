@@ -11,21 +11,27 @@ namespace david63\logsearches\migrations;
 
 class version_1_0_0 extends \phpbb\db\migration\migration
 {
+/****
+	static public function depends_on()
+	{
+		return array('\phpbb\db\migration\data\v31x\v315rc1');
+	}
+****/
+
 	public function update_data()
 	{
 		return array(
 			array('config.add', array('search_log_all', '0')),
 			array('config.add', array('search_log_enable', '0')),
+			array('config.add', array('search_log_per_page', '25')),
 			array('config.add', array('search_log_prune_all', '0')),
 			array('config.add', array('search_log_prune_days', '0')),
 			array('config.add', array('search_log_prune_gc', '86400')),
-			array('config.add', array('search_log_prune_last_gc', '0', 1)),
+			array('config.add', array('search_log_prune_last_gc', time())),
 			array('config.add', array('version_logsearches', '1.0.0')),
 
 			// Add the ACP modules
 			array('module.add', array('acp', 'ACP_CAT_DOT_MODS', 'SEARCH_LOG_OPTIONS')),
-			array('module.add', array('acp', 'ACP_FORUM_LOGS', 'SEARCH_LOG')),
-
 			array('module.add', array(
 				'acp', 'SEARCH_LOG_OPTIONS', array(
 					'module_basename'	=> '\david63\logsearches\acp\logsearches_options_module',
@@ -33,6 +39,7 @@ class version_1_0_0 extends \phpbb\db\migration\migration
 				),
 			)),
 
+			array('module.add', array('acp', 'ACP_FORUM_LOGS', 'SEARCH_LOG')),
 			array('module.add', array(
 				'acp', 'SEARCH_LOG', array(
 					'module_basename'	=> '\david63\logsearches\acp\logsearches_module',
@@ -49,7 +56,7 @@ class version_1_0_0 extends \phpbb\db\migration\migration
 				$this->table_prefix . 'search_log'	=> array(
 					'COLUMNS'	=> array(
 						'log_id'			=> array('UINT', null, 'auto_increment'),
-						'log_search_type'	=> array('UINT:4', 0),
+						'log_search_type'	=> array('BOOL', 0),
 						'user_id'			=> array('UINT', 0),
 						'log_data'			=> array('TEXT_UNI', ''),
 						'log_ip'			=> array('VCHAR:40', ''),
