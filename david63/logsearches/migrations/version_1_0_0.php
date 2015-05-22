@@ -22,7 +22,7 @@ class version_1_0_0 extends \phpbb\db\migration\migration
 	{
 		return array(
 			array('config.add', array('search_log_all', '0')),
-			array('config.add', array('search_log_enable', '0')),
+			array('config.add', array('search_log_enable', '1')),
 			array('config.add', array('search_log_per_page', '25')),
 			array('config.add', array('search_log_prune_all', '0')),
 			array('config.add', array('search_log_prune_days', '0')),
