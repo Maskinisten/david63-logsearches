@@ -217,7 +217,7 @@ class admin_controller implements admin_interface
 				'USERNAME'	=> get_username_string('full', $row['user_id'], $row['username'], $row['user_colour']),
 				'IP'		=> $row['log_ip'],
 				'DATE'		=> $this->user->format_date($row['log_time']),
-				'TYPE'		=> $this->get_search_type($row['log_search_type']),
+				'TYPE'		=> ($row['log_search_type']) ? $this->user->lang['SEARCH_SUCCESS'] : $this->user->lang['SEARCH_FAIL'],
 				'DATA'		=> $row['log_data'],
 				'ID'		=> $row['log_id'],
 			));
@@ -268,11 +268,6 @@ class admin_controller implements admin_interface
 
 		$phpbb_log = $this->container->get('log');
 		$phpbb_log->add('admin', $this->user->data['user_id'], $this->user->ip, 'SEARCH_LOG_CLEAR');
-	}
-
-	protected function get_search_type($search_type)
-	{
-		return ($search_type) ? $this->user->lang['SEARCH_SUCCESS'] : $this->user->lang['SEARCH_FAIL'];
 	}
 
 	/**
