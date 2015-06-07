@@ -37,6 +37,8 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, array(
+	'NO_LOG_ENTRIES_SELECTED'		=> 'No log entries selected',
+
 	'SEARCH_ALL'					=> 'All',
 	'SEARCH_FAIL'					=> 'Fail',
 	'SEARCH_FAILED'					=> 'Failed',

@@ -237,6 +237,11 @@ class admin_controller implements admin_interface
 
 	protected function search_log_delete($conditions = array())
 	{
+		if (!sizeof($conditions))
+		{
+			trigger_error($this->user->lang('NO_LOG_ENTRIES_SELECTED') . adm_back_link($this->u_action));
+		}
+
 		$sql_where = 'WHERE ';
 
 		if (isset($conditions['keywords']))
